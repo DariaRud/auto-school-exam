@@ -1,0 +1,194 @@
+﻿@page "/exam/{TicketId}"
+@using AutoSchoolExam.Models
+@using AutoSchoolExam.Data.Repositories
+@using AutoSchoolExam.Services
+
+@* Включаем интерактивность для кнопок *@
+@rendermode Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer
+
+@inject ITicketRepository TicketRepository
+@inject ExamState ExamState
+@inject NavigationManager Nav
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .exam-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .option-btn {
+        text-align: left;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border: 2px solid #e9ecef;
+        background: white;
+        transition: all 0.2s;
+    }
+
+        .option-btn:hover {
+            border-color: #0d6efd;
+            background-color: #f1f8ff;
+        }
+
+    .progress {
+        height: 10px;
+        border-radius: 5px;
+    }
+
+    .result-box {
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="container py-4">
+    @if (ExamState.IsExamFinished)
+    {
+        <div class="card shadow-sm exam-card text-center p-5">
+            @if (ExamState.IsPassed)
+            {
+                <div class="result-box bg-success bg-opacity-10">
+                    <div style="font-size: 5rem;"></div>
+                    <h2 class="text-success fw-bold mb-3">Экзамен сдан!</h2>
+                    <p class="lead">Поздравляем! Вы успешно прошли тестирование.</p>
+                    <p class="text-muted fs-5">Допущено ошибок: @ExamState.ErrorCount (допустимо 2)</p>
+                </div>
+            }
+            else
+            {
+                <div class="result-box bg-danger bg-opacity-10">
+                    <div style="font-size: 5rem;">😞</div>
+                    <h2 class="text-danger fw-bold mb-3">Экзамен не сдан</h2>
+                    <p class="lead">Вы превысили лимит ошибок.</p>
+                    <p class="text-muted fs-5">Допущено ошибок: @ExamState.ErrorCount (максимум 2)</p>
+                </div>
+            }
+            <button class="btn btn-primary btn-lg mt-4 px-5 rounded-pill" @onclick="GoHome">
+                Вернуться на главную
+            </button>
+        </div>
+    }
+    else if (_currentQuestion != null)
+    {
+        <!-- Панель с прогрессом -->
+        <div class="card exam-card mb-4 border-0 shadow-sm">
+            <div class="card-body py-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-primary">@ExamState.CurrentTicket?.Name</span>
+                    <div>
+                        <span class="badge bg-primary rounded-pill me-2">Вопрос @(ExamState.CurrentQuestionIndex + 1)/20</span>
+                        <span class="badge bg-danger rounded-pill">Ошибок: @ExamState.ErrorCount</span>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @((ExamState.CurrentQuestionIndex + 1) * 5)%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Карточка с вопросом -->
+        <div class="card exam-card">
+            <div class="card-body p-5">
+                <!-- Место для картинки вопроса (если бы она была в базе) -->
+                @* <img src="..." class="mb-4 img-fluid" /> *@
+
+                <h3 class="mb-4 text-dark">@_currentQuestion.Text</h3>
+
+                <div class="list-group list-group-flush">
+                    @foreach (var opt in _currentQuestion.Options)
+                    {
+                        <button class="list-group-item option-btn d-flex align-items-center"
+                                @onclick="() => SelectAnswer(opt)"
+                                disabled="@_answerSelected">
+                            <span class="me-3 fs-4">🔘</span>
+                            <span class="fs-5">@opt.Text</span>
+                        </button>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(ExamState.LastErrorMessage))
+                {
+                    <div class="alert alert-danger mt-4 text-center fw-bold fs-5 animate__animated animate__shakeX">
+                        ❌ @ExamState.LastErrorMessage
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">Билет не найден</div>
+    }
+</div>
+
+@code {
+    [Parameter] public string? TicketId { get; set; }
+    private Question? _currentQuestion;
+    private bool _answerSelected = false;
+    private int _ticketIdInt = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!int.TryParse(TicketId, out _ticketIdInt)) return;
+
+        var ticket = await TicketRepository.GetTicketByIdAsync(_ticketIdInt);
+        if (ticket != null)
+        {
+            ExamState.CurrentTicket = ticket;
+            ExamState.CurrentQuestionIndex = 0;
+            ExamState.ErrorCount = 0;
+            ExamState.LastErrorMessage = null;
+            LoadCurrentQuestion();
+        }
+    }
+
+    private void LoadCurrentQuestion()
+    {
+        if (ExamState.CurrentTicket != null && ExamState.CurrentQuestionIndex < ExamState.CurrentTicket.Questions.Count)
+        {
+            _currentQuestion = ExamState.CurrentTicket.Questions[ExamState.CurrentQuestionIndex];
+            _answerSelected = false;
+        }
+    }
+
+    private async Task SelectAnswer(Option option)
+    {
+        if (_answerSelected) return;
+        _answerSelected = true;
+
+        if (option.IsCorrect)
+        {
+            ExamState.LastErrorMessage = null;
+            await Task.Delay(400);
+            NextQuestion();
+        }
+        else
+        {
+            ExamState.ErrorCount++;
+            ExamState.LastErrorMessage = "Ответ неверный!";
+            await Task.Delay(800);
+            NextQuestion();
+        }
+        StateHasChanged();
+    }
+
+    private void NextQuestion()
+    {
+        ExamState.CurrentQuestionIndex++;
+        if (ExamState.CurrentQuestionIndex < 20)
+            LoadCurrentQuestion();
+    }
+
+    private void GoHome()
+    {
+        ExamState.Reset();
+        Nav.NavigateTo("/");
+    }
+}

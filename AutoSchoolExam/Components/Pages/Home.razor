@@ -1,7 +1,157 @@
 ﻿@page "/"
+@inject ITicketRepository TicketRepository
+@using AutoSchoolExam.Models
 
-<PageTitle>Home</PageTitle>
+<style>
+    /* Красивый фон для всего сайта */
+    body {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-<h1>Hello, world!</h1>
+    /* Шапка сайта */
+    .hero-banner {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
 
-Welcome to your new app.
+    /* Карточка билета */
+    .ticket-card {
+        background: white;
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        border: none;
+    }
+
+        .ticket-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+    /* Цветной блок с эмодзи вместо картинки */
+    .ticket-img {
+        height: 150px;
+        width: 100%;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 6rem;
+    }
+
+    /* Кнопка начала экзамена */
+    .btn-exam {
+        background: linear-gradient(45deg, #11998e, #38ef7d);
+        border: none;
+        color: white;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 30px;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .btn-exam:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4);
+            color: white;
+        }
+</style>
+
+<div class="container py-5">
+    <!-- Красивая шапка -->
+    <div class="hero-banner">
+        <div style="font-size: 5rem; margin-bottom: 10px;">🚦</div>
+        <h1 class="display-4 fw-bold">Автошкола "Светофор"</h1>
+        <p class="lead">Проверь свои знания ПДД прямо сейчас!<br><small>Бесплатно и без регистрации</small></p>
+    </div>
+
+    @if (_tickets == null)
+    {
+        <div class="text-center text-white mt-5">
+            <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem;"></div>
+            <p class="mt-3">Загрузка билетов...</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 justify-content-center">
+            @foreach (var ticket in _tickets)
+            {
+                // Выбираем эмодзи в зависимости от номера билета
+                var emoji = ticket.Id switch
+                {
+                    1 => "🚗",
+                    2 => "🚕",
+                    3 => "🚙",
+                    4 => "🚌",
+                    5 => "🚐",
+                    _ => "🚗"
+                };
+
+                // Выбираем градиент для каждого билета
+                var gradientStart = ticket.Id switch
+                {
+                    1 => "#667eea",
+                    2 => "#f093fb",
+                    3 => "#4facfe",
+                    4 => "#43e97b",
+                    5 => "#fa709a",
+                    _ => "#667eea"
+                };
+
+                var gradientEnd = ticket.Id switch
+                {
+                    1 => "#764ba2",
+                    2 => "#4facfe",
+                    3 => "#00f2fe",
+                    4 => "#38f9d7",
+                    5 => "#fee09e",
+                    _ => "#764ba2"
+                };
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="ticket-card h-100 shadow-sm">
+                        <!-- Цветной блок с эмодзи -->
+                        <div class="ticket-img" style="background: linear-gradient(135deg, @gradientStart 0%, @gradientEnd 100%);">
+                            @emoji
+                        </div>
+
+                        <div class="card-body text-center p-4">
+                            <h4 class="card-title fw-bold text-dark">@ticket.Name</h4>
+                            <p class="card-text text-muted">@ticket.Description</p>
+
+                            <div class="d-flex justify-content-center gap-2 mb-4">
+                                <span class="badge bg-primary rounded-pill px-3">20 вопросов</span>
+                                <span class="badge bg-success rounded-pill px-3">Макс. 2 ошибки</span>
+                            </div>
+
+                            <a href="/exam/@ticket.Id" class="btn btn-exam w-100">
+                                🚀 Начать экзамен
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<Ticket>? _tickets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _tickets = await TicketRepository.GetAllTicketsAsync();
+    }
+}

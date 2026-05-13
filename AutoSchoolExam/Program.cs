@@ -1,4 +1,4 @@
-using AutoSchoolExam.Components;
+п»їusing AutoSchoolExam.Components;
 using AutoSchoolExam.Data;
 using AutoSchoolExam.Data.Repositories;
 using AutoSchoolExam.Models;
@@ -7,31 +7,31 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем Blazor Server
+// Р”РѕР±Р°РІР»СЏРµРј Blazor Server
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Подключаем SQLite базу данных
+// РџРѕРґРєР»СЋС‡Р°РµРј SQLite Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=exams.db"));
 
-// Регистрируем репозитории (Dependency Injection)
+// Р РµРіРёСЃС‚СЂРёСЂСѓРµРј СЂРµРїРѕР·РёС‚РѕСЂРёРё (Dependency Injection)
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 
-// Регистрируем сервис состояния экзамена
+// Р РµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРµСЂРІРёСЃ СЃРѕСЃС‚РѕСЏРЅРёСЏ СЌРєР·Р°РјРµРЅР°
 builder.Services.AddScoped<ExamState>();
 
 var app = builder.Build();
 
-// Инициализация базы данных
+// РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-    // Применяем миграции (создаем БД если нет)
+    // РџСЂРёРјРµРЅСЏРµРј РјРёРіСЂР°С†РёРё (СЃРѕР·РґР°РµРј Р‘Р” РµСЃР»Рё РЅРµС‚)
     db.Database.Migrate();
 
-    // Если билетов нет, создаем их
+    // Р•СЃР»Рё Р±РёР»РµС‚РѕРІ РЅРµС‚, СЃРѕР·РґР°РµРј РёС…
     if (!db.Tickets.Any())
     {
         CreateTickets(db);
@@ -39,7 +39,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Настраиваем HTTP pipeline
+// РќР°СЃС‚СЂР°РёРІР°РµРј HTTP pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -56,1177 +56,1177 @@ app.MapRazorComponents<App>()
 app.Run();
 
 // =====================================================
-// МЕТОД СОЗДАНИЯ БИЛЕТОВ С РЕАЛЬНЫМИ ВОПРОСАМИ ПДД
+// РњР•РўРћР” РЎРћР—Р”РђРќРРЇ Р‘РР›Р•РўРћР’ РЎ Р Р•РђР›Р¬РќР«РњР Р’РћРџР РћРЎРђРњР РџР”Р”
 // =====================================================
 void CreateTickets(AppDbContext db)
 {
     var tickets = new List<Ticket>();
 
-    // ==================== БИЛЕТ 1 ====================
+    // ==================== Р‘РР›Р•Рў 1 ====================
     var ticket1 = new Ticket
     {
-        Name = "Билет №1",
-        Description = "Экзаменационный билет по ПДД категории B"
+        Name = "Р‘РёР»РµС‚ в„–1",
+        Description = "Р­РєР·Р°РјРµРЅР°С†РёРѕРЅРЅС‹Р№ Р±РёР»РµС‚ РїРѕ РџР”Р” РєР°С‚РµРіРѕСЂРёРё B"
     };
 
     ticket1.Questions = new List<Question>
     {
         new Question
         {
-            Text = "В каком случае водитель совершит вынужденную остановку?",
+            Text = "Р’ РєР°РєРѕРј СЃР»СѓС‡Р°Рµ РІРѕРґРёС‚РµР»СЊ СЃРѕРІРµСЂС€РёС‚ РІС‹РЅСѓР¶РґРµРЅРЅСѓСЋ РѕСЃС‚Р°РЅРѕРІРєСѓ?",
             Options = new List<Option>
             {
-                new Option { Text = "Остановившись на проезжей части из-за технической неисправности ТС", IsCorrect = true },
-                new Option { Text = "Остановившись для высадки пассажиров", IsCorrect = false },
-                new Option { Text = "Остановившись перед светофором", IsCorrect = false },
-                new Option { Text = "Остановившись для разгрузки груза", IsCorrect = false }
+                new Option { Text = "РћСЃС‚Р°РЅРѕРІРёРІС€РёСЃСЊ РЅР° РїСЂРѕРµР·Р¶РµР№ С‡Р°СЃС‚Рё РёР·-Р·Р° С‚РµС…РЅРёС‡РµСЃРєРѕР№ РЅРµРёСЃРїСЂР°РІРЅРѕСЃС‚Рё РўРЎ", IsCorrect = true },
+                new Option { Text = "РћСЃС‚Р°РЅРѕРІРёРІС€РёСЃСЊ РґР»СЏ РІС‹СЃР°РґРєРё РїР°СЃСЃР°Р¶РёСЂРѕРІ", IsCorrect = false },
+                new Option { Text = "РћСЃС‚Р°РЅРѕРІРёРІС€РёСЃСЊ РїРµСЂРµРґ СЃРІРµС‚РѕС„РѕСЂРѕРј", IsCorrect = false },
+                new Option { Text = "РћСЃС‚Р°РЅРѕРІРёРІС€РёСЃСЊ РґР»СЏ СЂР°Р·РіСЂСѓР·РєРё РіСЂСѓР·Р°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли Вам съезд на дорогу с грунтовым покрытием?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё Р’Р°Рј СЃСЉРµР·Рґ РЅР° РґРѕСЂРѕРіСѓ СЃ РіСЂСѓРЅС‚РѕРІС‹Рј РїРѕРєСЂС‹С‚РёРµРј?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешен", IsCorrect = true },
-                new Option { Text = "Запрещен", IsCorrect = false },
-                new Option { Text = "Разрешен только при отсутствии встречных ТС", IsCorrect = false },
-                new Option { Text = "Разрешен только с разрешения инспектора", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РїСЂРё РѕС‚СЃСѓС‚СЃС‚РІРёРё РІСЃС‚СЂРµС‡РЅС‹С… РўРЎ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ СЃ СЂР°Р·СЂРµС€РµРЅРёСЏ РёРЅСЃРїРµРєС‚РѕСЂР°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли Вы уступить дорогу автомобилю с включенными спецсигналами?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё Р’С‹ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ Р°РІС‚РѕРјРѕР±РёР»СЋ СЃ РІРєР»СЋС‡РµРЅРЅС‹РјРё СЃРїРµС†СЃРёРіРЅР°Р»Р°РјРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны уступить дорогу", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Обязаны только на перекрестке", IsCorrect = false },
-                new Option { Text = "Обязаны только в темное время суток", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РІ С‚РµРјРЅРѕРµ РІСЂРµРјСЏ СЃСѓС‚РѕРє", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает мигающий зеленый сигнал светофора?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ РјРёРіР°СЋС‰РёР№ Р·РµР»РµРЅС‹Р№ СЃРёРіРЅР°Р» СЃРІРµС‚РѕС„РѕСЂР°?",
             Options = new List<Option>
             {
-                new Option { Text = "Время действия сигнала истекает", IsCorrect = true },
-                new Option { Text = "Светофор неисправен", IsCorrect = false },
-                new Option { Text = "Разрешает движение с осторожностью", IsCorrect = false },
-                new Option { Text = "Запрещает движение", IsCorrect = false }
+                new Option { Text = "Р’СЂРµРјСЏ РґРµР№СЃС‚РІРёСЏ СЃРёРіРЅР°Р»Р° РёСЃС‚РµРєР°РµС‚", IsCorrect = true },
+                new Option { Text = "РЎРІРµС‚РѕС„РѕСЂ РЅРµРёСЃРїСЂР°РІРµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РґРІРёР¶РµРЅРёРµ СЃ РѕСЃС‚РѕСЂРѕР¶РЅРѕСЃС‚СЊСЋ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой максимальной скоростью можно двигаться в жилой зоне?",
+            Text = "РЎ РєР°РєРѕР№ РјР°РєСЃРёРјР°Р»СЊРЅРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РјРѕР¶РЅРѕ РґРІРёРіР°С‚СЊСЃСЏ РІ Р¶РёР»РѕР№ Р·РѕРЅРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "20 км/ч", IsCorrect = true },
-                new Option { Text = "40 км/ч", IsCorrect = false },
-                new Option { Text = "60 км/ч", IsCorrect = false },
-                new Option { Text = "70 км/ч", IsCorrect = false }
+                new Option { Text = "20 РєРј/С‡", IsCorrect = true },
+                new Option { Text = "40 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "60 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "70 РєРј/С‡", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли обгон на перекрестке?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё РѕР±РіРѕРЅ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается на равнозначных перекрестках", IsCorrect = true },
-                new Option { Text = "Разрешается всегда", IsCorrect = false },
-                new Option { Text = "Запрещается всегда", IsCorrect = false },
-                new Option { Text = "Разрешается только на регулируемых", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ РЅР° СЂР°РІРЅРѕР·РЅР°С‡РЅС‹С… РїРµСЂРµРєСЂРµСЃС‚РєР°С…", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РІСЃРµРіРґР°", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ РІСЃРµРіРґР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РЅР° СЂРµРіСѓР»РёСЂСѓРµРјС‹С…", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто имеет преимущество на нерегулируемом перекрестке?",
+            Text = "РљС‚Рѕ РёРјРµРµС‚ РїСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РЅР° РЅРµСЂРµРіСѓР»РёСЂСѓРµРјРѕРј РїРµСЂРµРєСЂРµСЃС‚РєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Трамвай в равнозначных условиях", IsCorrect = true },
-                new Option { Text = "Легковой автомобиль", IsCorrect = false },
-                new Option { Text = "Грузовой автомобиль", IsCorrect = false },
-                new Option { Text = "Мотоцикл", IsCorrect = false }
+                new Option { Text = "РўСЂР°РјРІР°Р№ РІ СЂР°РІРЅРѕР·РЅР°С‡РЅС‹С… СѓСЃР»РѕРІРёСЏС…", IsCorrect = true },
+                new Option { Text = "Р›РµРіРєРѕРІРѕР№ Р°РІС‚РѕРјРѕР±РёР»СЊ", IsCorrect = false },
+                new Option { Text = "Р“СЂСѓР·РѕРІРѕР№ Р°РІС‚РѕРјРѕР±РёР»СЊ", IsCorrect = false },
+                new Option { Text = "РњРѕС‚РѕС†РёРєР»", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Движение без остановки запрещено»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«Р”РІРёР¶РµРЅРёРµ Р±РµР· РѕСЃС‚Р°РЅРѕРІРєРё Р·Р°РїСЂРµС‰РµРЅРѕВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязательная остановка перед перекрестком", IsCorrect = true },
-                new Option { Text = "Запрет на остановку", IsCorrect = false },
-                new Option { Text = "Разрешение на движение", IsCorrect = false },
-                new Option { Text = "Ограничение скорости", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ РѕСЃС‚Р°РЅРѕРІРєР° РїРµСЂРµРґ РїРµСЂРµРєСЂРµСЃС‚РєРѕРј", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‚ РЅР° РѕСЃС‚Р°РЅРѕРІРєСѓ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРёРµ РЅР° РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РћРіСЂР°РЅРёС‡РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Можно ли парковаться на тротуаре?",
+            Text = "РњРѕР¶РЅРѕ Р»Рё РїР°СЂРєРѕРІР°С‚СЊСЃСЏ РЅР° С‚СЂРѕС‚СѓР°СЂРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Только если есть соответствующий знак", IsCorrect = true },
-                new Option { Text = "Можно всегда", IsCorrect = false },
-                new Option { Text = "Нельзя никогда", IsCorrect = false },
-                new Option { Text = "Можно только ночью", IsCorrect = false }
+                new Option { Text = "РўРѕР»СЊРєРѕ РµСЃР»Рё РµСЃС‚СЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ Р·РЅР°Рє", IsCorrect = true },
+                new Option { Text = "РњРѕР¶РЅРѕ РІСЃРµРіРґР°", IsCorrect = false },
+                new Option { Text = "РќРµР»СЊР·СЏ РЅРёРєРѕРіРґР°", IsCorrect = false },
+                new Option { Text = "РњРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Какой сигнал подает водитель поднятой вверх рукой?",
+            Text = "РљР°РєРѕР№ СЃРёРіРЅР°Р» РїРѕРґР°РµС‚ РІРѕРґРёС‚РµР»СЊ РїРѕРґРЅСЏС‚РѕР№ РІРІРµСЂС… СЂСѓРєРѕР№?",
             Options = new List<Option>
             {
-                new Option { Text = "Снижение скорости, остановка", IsCorrect = true },
-                new Option { Text = "Поворот направо", IsCorrect = false },
-                new Option { Text = "Поворот налево", IsCorrect = false },
-                new Option { Text = "Движение прямо", IsCorrect = false }
+                new Option { Text = "РЎРЅРёР¶РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё, РѕСЃС‚Р°РЅРѕРІРєР°", IsCorrect = true },
+                new Option { Text = "РџРѕРІРѕСЂРѕС‚ РЅР°РїСЂР°РІРѕ", IsCorrect = false },
+                new Option { Text = "РџРѕРІРѕСЂРѕС‚ РЅР°Р»РµРІРѕ", IsCorrect = false },
+                new Option { Text = "Р”РІРёР¶РµРЅРёРµ РїСЂСЏРјРѕ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли разворот на железнодорожном переезде?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° Р¶РµР»РµР·РЅРѕРґРѕСЂРѕР¶РЅРѕРј РїРµСЂРµРµР·РґРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет поезда", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РїРѕРµР·РґР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой скоростью двигаться вне населенного пункта на легковом авто?",
+            Text = "РЎ РєР°РєРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РґРІРёРіР°С‚СЊСЃСЏ РІРЅРµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р° РЅР° Р»РµРіРєРѕРІРѕРј Р°РІС‚Рѕ?",
             Options = new List<Option>
             {
-                new Option { Text = "Не более 90 км/ч", IsCorrect = true },
-                new Option { Text = "Не более 60 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 110 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 70 км/ч", IsCorrect = false }
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 90 РєРј/С‡", IsCorrect = true },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 60 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 110 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 70 РєРј/С‡", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кому нужно уступать при повороте направо?",
+            Text = "РљРѕРјСѓ РЅСѓР¶РЅРѕ СѓСЃС‚СѓРїР°С‚СЊ РїСЂРё РїРѕРІРѕСЂРѕС‚Рµ РЅР°РїСЂР°РІРѕ?",
             Options = new List<Option>
             {
-                new Option { Text = "Пешеходам и велосипедистам", IsCorrect = true },
-                new Option { Text = "Никому", IsCorrect = false },
-                new Option { Text = "Только пешеходам", IsCorrect = false },
-                new Option { Text = "Только велосипедистам", IsCorrect = false }
+                new Option { Text = "РџРµС€РµС…РѕРґР°Рј Рё РІРµР»РѕСЃРёРїРµРґРёСЃС‚Р°Рј", IsCorrect = true },
+                new Option { Text = "РќРёРєРѕРјСѓ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РїРµС€РµС…РѕРґР°Рј", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РІРµР»РѕСЃРёРїРµРґРёСЃС‚Р°Рј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что такое «Главная дорога»?",
+            Text = "Р§С‚Рѕ С‚Р°РєРѕРµ В«Р“Р»Р°РІРЅР°СЏ РґРѕСЂРѕРіР°В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Дорога с твердым покрытием относительно грунтовой", IsCorrect = true },
-                new Option { Text = "Дорога с большим количеством полос", IsCorrect = false },
-                new Option { Text = "Дорога с интенсивным движением", IsCorrect = false },
-                new Option { Text = "Дорога в городе", IsCorrect = false }
+                new Option { Text = "Р”РѕСЂРѕРіР° СЃ С‚РІРµСЂРґС‹Рј РїРѕРєСЂС‹С‚РёРµРј РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РіСЂСѓРЅС‚РѕРІРѕР№", IsCorrect = true },
+                new Option { Text = "Р”РѕСЂРѕРіР° СЃ Р±РѕР»СЊС€РёРј РєРѕР»РёС‡РµСЃС‚РІРѕРј РїРѕР»РѕСЃ", IsCorrect = false },
+                new Option { Text = "Р”РѕСЂРѕРіР° СЃ РёРЅС‚РµРЅСЃРёРІРЅС‹Рј РґРІРёР¶РµРЅРёРµРј", IsCorrect = false },
+                new Option { Text = "Р”РѕСЂРѕРіР° РІ РіРѕСЂРѕРґРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Можно ли двигаться по полосе встречного движения?",
+            Text = "РњРѕР¶РЅРѕ Р»Рё РґРІРёРіР°С‚СЊСЃСЏ РїРѕ РїРѕР»РѕСЃРµ РІСЃС‚СЂРµС‡РЅРѕРіРѕ РґРІРёР¶РµРЅРёСЏ?",
             Options = new List<Option>
             {
-                new Option { Text = "Только при обгоне если это разрешено", IsCorrect = true },
-                new Option { Text = "Можно всегда", IsCorrect = false },
-                new Option { Text = "Нельзя никогда", IsCorrect = false },
-                new Option { Text = "Можно только ночью", IsCorrect = false }
+                new Option { Text = "РўРѕР»СЊРєРѕ РїСЂРё РѕР±РіРѕРЅРµ РµСЃР»Рё СЌС‚Рѕ СЂР°Р·СЂРµС€РµРЅРѕ", IsCorrect = true },
+                new Option { Text = "РњРѕР¶РЅРѕ РІСЃРµРіРґР°", IsCorrect = false },
+                new Option { Text = "РќРµР»СЊР·СЏ РЅРёРєРѕРіРґР°", IsCorrect = false },
+                new Option { Text = "РњРѕР¶РЅРѕ С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает желтый сигнал светофора?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р¶РµР»С‚С‹Р№ СЃРёРіРЅР°Р» СЃРІРµС‚РѕС„РѕСЂР°?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает движение, кроме экстренного торможения", IsCorrect = true },
-                new Option { Text = "Разрешает движение", IsCorrect = false },
-                new Option { Text = "Предупреждает о неисправности", IsCorrect = false },
-                new Option { Text = "Разрешает движение с осторожностью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ, РєСЂРѕРјРµ СЌРєСЃС‚СЂРµРЅРЅРѕРіРѕ С‚РѕСЂРјРѕР¶РµРЅРёСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚ Рѕ РЅРµРёСЃРїСЂР°РІРЅРѕСЃС‚Рё", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РґРІРёР¶РµРЅРёРµ СЃ РѕСЃС‚РѕСЂРѕР¶РЅРѕСЃС‚СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли стоянка на мосту?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё СЃС‚РѕСЏРЅРєР° РЅР° РјРѕСЃС‚Сѓ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена если нет помех", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РµСЃР»Рё РЅРµС‚ РїРѕРјРµС…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Какое расстояние должно быть между ТС при остановке?",
+            Text = "РљР°РєРѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РјРµР¶РґСѓ РўРЎ РїСЂРё РѕСЃС‚Р°РЅРѕРІРєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Не менее 3 метров до сплошной линии", IsCorrect = true },
-                new Option { Text = "Не менее 1 метра", IsCorrect = false },
-                new Option { Text = "Не менее 5 метров", IsCorrect = false },
-                new Option { Text = "Любое расстояние", IsCorrect = false }
+                new Option { Text = "РќРµ РјРµРЅРµРµ 3 РјРµС‚СЂРѕРІ РґРѕ СЃРїР»РѕС€РЅРѕР№ Р»РёРЅРёРё", IsCorrect = true },
+                new Option { Text = "РќРµ РјРµРЅРµРµ 1 РјРµС‚СЂР°", IsCorrect = false },
+                new Option { Text = "РќРµ РјРµРЅРµРµ 5 РјРµС‚СЂРѕРІ", IsCorrect = false },
+                new Option { Text = "Р›СЋР±РѕРµ СЂР°СЃСЃС‚РѕСЏРЅРёРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто имеет преимущество на перекрестке с круговым движением?",
+            Text = "РљС‚Рѕ РёРјРµРµС‚ РїСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ СЃ РєСЂСѓРіРѕРІС‹Рј РґРІРёР¶РµРЅРёРµРј?",
             Options = new List<Option>
             {
-                new Option { Text = "ТС движущиеся по кругу (если нет знаков)", IsCorrect = true },
-                new Option { Text = "Въезжающие на круг", IsCorrect = false },
-                new Option { Text = "Легковые автомобили", IsCorrect = false },
-                new Option { Text = "Грузовые автомобили", IsCorrect = false }
+                new Option { Text = "РўРЎ РґРІРёР¶СѓС‰РёРµСЃСЏ РїРѕ РєСЂСѓРіСѓ (РµСЃР»Рё РЅРµС‚ Р·РЅР°РєРѕРІ)", IsCorrect = true },
+                new Option { Text = "Р’СЉРµР·Р¶Р°СЋС‰РёРµ РЅР° РєСЂСѓРі", IsCorrect = false },
+                new Option { Text = "Р›РµРіРєРѕРІС‹Рµ Р°РІС‚РѕРјРѕР±РёР»Рё", IsCorrect = false },
+                new Option { Text = "Р“СЂСѓР·РѕРІС‹Рµ Р°РІС‚РѕРјРѕР±РёР»Рё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что необходимо сообщить при вызове скорой помощи?",
+            Text = "Р§С‚Рѕ РЅРµРѕР±С…РѕРґРёРјРѕ СЃРѕРѕР±С‰РёС‚СЊ РїСЂРё РІС‹Р·РѕРІРµ СЃРєРѕСЂРѕР№ РїРѕРјРѕС‰Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Место, количество пострадавших, их состояние", IsCorrect = true },
-                new Option { Text = "Только место ДТП", IsCorrect = false },
-                new Option { Text = "Только количество машин", IsCorrect = false },
-                new Option { Text = "Только свои данные", IsCorrect = false }
+                new Option { Text = "РњРµСЃС‚Рѕ, РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕСЃС‚СЂР°РґР°РІС€РёС…, РёС… СЃРѕСЃС‚РѕСЏРЅРёРµ", IsCorrect = true },
+                new Option { Text = "РўРѕР»СЊРєРѕ РјРµСЃС‚Рѕ Р”РўРџ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РєРѕР»РёС‡РµСЃС‚РІРѕ РјР°С€РёРЅ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ СЃРІРѕРё РґР°РЅРЅС‹Рµ", IsCorrect = false }
             }
         }
     };
 
     tickets.Add(ticket1);
 
-    // ==================== БИЛЕТ 2 ====================
+    // ==================== Р‘РР›Р•Рў 2 ====================
     var ticket2 = new Ticket
     {
-        Name = "Билет №2",
-        Description = "Экзаменационный билет по ПДД категории B"
+        Name = "Р‘РёР»РµС‚ в„–2",
+        Description = "Р­РєР·Р°РјРµРЅР°С†РёРѕРЅРЅС‹Р№ Р±РёР»РµС‚ РїРѕ РџР”Р” РєР°С‚РµРіРѕСЂРёРё B"
     };
 
     ticket2.Questions = new List<Question>
     {
         new Question
         {
-            Text = "Разрешается ли движение задним ходом на перекрестке?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё РґРІРёР¶РµРЅРёРµ Р·Р°РґРЅРёРј С…РѕРґРѕРј РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается если нет помех", IsCorrect = false },
-                new Option { Text = "Разрешается только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РµСЃР»Рё РЅРµС‚ РїРѕРјРµС…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает прерывистая линия разметки?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ РїСЂРµСЂС‹РІРёСЃС‚Р°СЏ Р»РёРЅРёСЏ СЂР°Р·РјРµС‚РєРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешает перестроение и обгон", IsCorrect = true },
-                new Option { Text = "Запрещает перестроение", IsCorrect = false },
-                new Option { Text = "Разделяет встречные потоки", IsCorrect = false },
-                new Option { Text = "Обозначает край проезжей части", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ Рё РѕР±РіРѕРЅ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·РґРµР»СЏРµС‚ РІСЃС‚СЂРµС‡РЅС‹Рµ РїРѕС‚РѕРєРё", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ РєСЂР°Р№ РїСЂРѕРµР·Р¶РµР№ С‡Р°СЃС‚Рё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой стороны разрешен обгон на дороге с двусторонним движением?",
+            Text = "РЎ РєР°РєРѕР№ СЃС‚РѕСЂРѕРЅС‹ СЂР°Р·СЂРµС€РµРЅ РѕР±РіРѕРЅ РЅР° РґРѕСЂРѕРіРµ СЃ РґРІСѓСЃС‚РѕСЂРѕРЅРЅРёРј РґРІРёР¶РµРЅРёРµРј?",
             Options = new List<Option>
             {
-                new Option { Text = "С левой стороны", IsCorrect = true },
-                new Option { Text = "С правой стороны", IsCorrect = false },
-                new Option { Text = "С любой стороны", IsCorrect = false },
-                new Option { Text = "Обгон запрещен", IsCorrect = false }
+                new Option { Text = "РЎ Р»РµРІРѕР№ СЃС‚РѕСЂРѕРЅС‹", IsCorrect = true },
+                new Option { Text = "РЎ РїСЂР°РІРѕР№ СЃС‚РѕСЂРѕРЅС‹", IsCorrect = false },
+                new Option { Text = "РЎ Р»СЋР±РѕР№ СЃС‚РѕСЂРѕРЅС‹", IsCorrect = false },
+                new Option { Text = "РћР±РіРѕРЅ Р·Р°РїСЂРµС‰РµРЅ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли водители уступать дорогу пешеходам на нерегулируемом переходе?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІРѕРґРёС‚РµР»Рё СѓСЃС‚СѓРїР°С‚СЊ РґРѕСЂРѕРіСѓ РїРµС€РµС…РѕРґР°Рј РЅР° РЅРµСЂРµРіСѓР»РёСЂСѓРµРјРѕРј РїРµСЂРµС…РѕРґРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны всегда", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Обязаны только если пешеход на проезжей части", IsCorrect = false },
-                new Option { Text = "Обязаны только в темное время", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ РІСЃРµРіРґР°", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РµСЃР»Рё РїРµС€РµС…РѕРґ РЅР° РїСЂРѕРµР·Р¶РµР№ С‡Р°СЃС‚Рё", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РІ С‚РµРјРЅРѕРµ РІСЂРµРјСЏ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли остановка на остановке общественного транспорта?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё РѕСЃС‚Р°РЅРѕРІРєР° РЅР° РѕСЃС‚Р°РЅРѕРІРєРµ РѕР±С‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‚СЂР°РЅСЃРїРѕСЂС‚Р°?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена ближе 15м до и после знака", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена только для посадки", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР° Р±Р»РёР¶Рµ 15Рј РґРѕ Рё РїРѕСЃР»Рµ Р·РЅР°РєР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РґР»СЏ РїРѕСЃР°РґРєРё", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Главная дорога»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«Р“Р»Р°РІРЅР°СЏ РґРѕСЂРѕРіР°В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Преимущество проезда перекрестка", IsCorrect = true },
-                new Option { Text = "Запрет на въезд", IsCorrect = false },
-                new Option { Text = "Ограничение скорости", IsCorrect = false },
-                new Option { Text = "Конец главной дороги", IsCorrect = false }
+                new Option { Text = "РџСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РїСЂРѕРµР·РґР° РїРµСЂРµРєСЂРµСЃС‚РєР°", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‚ РЅР° РІСЉРµР·Рґ", IsCorrect = false },
+                new Option { Text = "РћРіСЂР°РЅРёС‡РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚Рё", IsCorrect = false },
+                new Option { Text = "РљРѕРЅРµС† РіР»Р°РІРЅРѕР№ РґРѕСЂРѕРіРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Можно ли парковаться на газоне?",
+            Text = "РњРѕР¶РЅРѕ Р»Рё РїР°СЂРєРѕРІР°С‚СЊСЃСЏ РЅР° РіР°Р·РѕРЅРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещено", IsCorrect = true },
-                new Option { Text = "Разрешено", IsCorrect = false },
-                new Option { Text = "Разрешено если нет знака", IsCorrect = false },
-                new Option { Text = "Разрешено только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅРѕ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРѕ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРѕ РµСЃР»Рё РЅРµС‚ Р·РЅР°РєР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРѕ С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Какой сигнал поворота нужно включить при перестроении направо?",
+            Text = "РљР°РєРѕР№ СЃРёРіРЅР°Р» РїРѕРІРѕСЂРѕС‚Р° РЅСѓР¶РЅРѕ РІРєР»СЋС‡РёС‚СЊ РїСЂРё РїРµСЂРµСЃС‚СЂРѕРµРЅРёРё РЅР°РїСЂР°РІРѕ?",
             Options = new List<Option>
             {
-                new Option { Text = "Правый поворот", IsCorrect = true },
-                new Option { Text = "Левый поворот", IsCorrect = false },
-                new Option { Text = "Аварийную сигнализацию", IsCorrect = false },
-                new Option { Text = "Никакой не нужен", IsCorrect = false }
+                new Option { Text = "РџСЂР°РІС‹Р№ РїРѕРІРѕСЂРѕС‚", IsCorrect = true },
+                new Option { Text = "Р›РµРІС‹Р№ РїРѕРІРѕСЂРѕС‚", IsCorrect = false },
+                new Option { Text = "РђРІР°СЂРёР№РЅСѓСЋ СЃРёРіРЅР°Р»РёР·Р°С†РёСЋ", IsCorrect = false },
+                new Option { Text = "РќРёРєР°РєРѕР№ РЅРµ РЅСѓР¶РµРЅ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на пешеходном переходе?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° РїРµС€РµС…РѕРґРЅРѕРј РїРµСЂРµС…РѕРґРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет пешеходов", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РїРµС€РµС…РѕРґРѕРІ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой минимальной глубиной протектора разрешена эксплуатация шин?",
+            Text = "РЎ РєР°РєРѕР№ РјРёРЅРёРјР°Р»СЊРЅРѕР№ РіР»СѓР±РёРЅРѕР№ РїСЂРѕС‚РµРєС‚РѕСЂР° СЂР°Р·СЂРµС€РµРЅР° СЌРєСЃРїР»СѓР°С‚Р°С†РёСЏ С€РёРЅ?",
             Options = new List<Option>
             {
-                new Option { Text = "1.6 мм", IsCorrect = true },
-                new Option { Text = "2.0 мм", IsCorrect = false },
-                new Option { Text = "3.0 мм", IsCorrect = false },
-                new Option { Text = "4.0 мм", IsCorrect = false }
+                new Option { Text = "1.6 РјРј", IsCorrect = true },
+                new Option { Text = "2.0 РјРј", IsCorrect = false },
+                new Option { Text = "3.0 РјРј", IsCorrect = false },
+                new Option { Text = "4.0 РјРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает сплошная линия разметки?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ СЃРїР»РѕС€РЅР°СЏ Р»РёРЅРёСЏ СЂР°Р·РјРµС‚РєРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает пересечение", IsCorrect = true },
-                new Option { Text = "Разрешает обгон", IsCorrect = false },
-                new Option { Text = "Разрешает перестроение", IsCorrect = false },
-                new Option { Text = "Обозначает парковку", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РїРµСЂРµСЃРµС‡РµРЅРёРµ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РѕР±РіРѕРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ РїР°СЂРєРѕРІРєСѓ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли разворот на мосту?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° РјРѕСЃС‚Сѓ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается если нет помех", IsCorrect = false },
-                new Option { Text = "Разрешается только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РµСЃР»Рё РЅРµС‚ РїРѕРјРµС…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто должен уступить дорогу при одновременном перестроении?",
+            Text = "РљС‚Рѕ РґРѕР»Р¶РµРЅ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ РїСЂРё РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕРј РїРµСЂРµСЃС‚СЂРѕРµРЅРёРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Водитель при перестроении на соседнюю полосу", IsCorrect = true },
-                new Option { Text = "Водитель на главной полосе", IsCorrect = false },
-                new Option { Text = "Оба водителя", IsCorrect = false },
-                new Option { Text = "Никто", IsCorrect = false }
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ РїСЂРё РїРµСЂРµСЃС‚СЂРѕРµРЅРёРё РЅР° СЃРѕСЃРµРґРЅСЋСЋ РїРѕР»РѕСЃСѓ", IsCorrect = true },
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ РЅР° РіР»Р°РІРЅРѕР№ РїРѕР»РѕСЃРµ", IsCorrect = false },
+                new Option { Text = "РћР±Р° РІРѕРґРёС‚РµР»СЏ", IsCorrect = false },
+                new Option { Text = "РќРёРєС‚Рѕ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешено ли движение с включенными противотуманными фарами днем?",
+            Text = "Р Р°Р·СЂРµС€РµРЅРѕ Р»Рё РґРІРёР¶РµРЅРёРµ СЃ РІРєР»СЋС‡РµРЅРЅС‹РјРё РїСЂРѕС‚РёРІРѕС‚СѓРјР°РЅРЅС‹РјРё С„Р°СЂР°РјРё РґРЅРµРј?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешено", IsCorrect = true },
-                new Option { Text = "Запрещено", IsCorrect = false },
-                new Option { Text = "Разрешено только в туман", IsCorrect = false },
-                new Option { Text = "Разрешено только ночью", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРѕ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅРѕ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРѕ С‚РѕР»СЊРєРѕ РІ С‚СѓРјР°РЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРѕ С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Уступи дорогу»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РЈСЃС‚СѓРїРё РґРѕСЂРѕРіСѓВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Уступить ТС на пересекаемой дороге", IsCorrect = true },
-                new Option { Text = "Полная остановка", IsCorrect = false },
-                new Option { Text = "Запрет на въезд", IsCorrect = false },
-                new Option { Text = "Преимущество проезда", IsCorrect = false }
+                new Option { Text = "РЈСЃС‚СѓРїРёС‚СЊ РўРЎ РЅР° РїРµСЂРµСЃРµРєР°РµРјРѕР№ РґРѕСЂРѕРіРµ", IsCorrect = true },
+                new Option { Text = "РџРѕР»РЅР°СЏ РѕСЃС‚Р°РЅРѕРІРєР°", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‚ РЅР° РІСЉРµР·Рґ", IsCorrect = false },
+                new Option { Text = "РџСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РїСЂРѕРµР·РґР°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли буксировка на автомагистрали?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё Р±СѓРєСЃРёСЂРѕРІРєР° РЅР° Р°РІС‚РѕРјР°РіРёСЃС‚СЂР°Р»Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена только днем", IsCorrect = false },
-                new Option { Text = "Разрешена если скорость меньше 60", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РµСЃР»Рё СЃРєРѕСЂРѕСЃС‚СЊ РјРµРЅСЊС€Рµ 60", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой скоростью можно двигаться в населенном пункте?",
+            Text = "РЎ РєР°РєРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РјРѕР¶РЅРѕ РґРІРёРіР°С‚СЊСЃСЏ РІ РЅР°СЃРµР»РµРЅРЅРѕРј РїСѓРЅРєС‚Рµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Не более 60 км/ч", IsCorrect = true },
-                new Option { Text = "Не более 40 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 80 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 90 км/ч", IsCorrect = false }
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 60 РєРј/С‡", IsCorrect = true },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 40 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 80 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 90 РєРј/С‡", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязательно ли использование ремней безопасности?",
+            Text = "РћР±СЏР·Р°С‚РµР»СЊРЅРѕ Р»Рё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ СЂРµРјРЅРµР№ Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязательно для всех", IsCorrect = true },
-                new Option { Text = "Только для водителя", IsCorrect = false },
-                new Option { Text = "Только на трассе", IsCorrect = false },
-                new Option { Text = "Не обязательно", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°С‚РµР»СЊРЅРѕ РґР»СЏ РІСЃРµС…", IsCorrect = true },
+                new Option { Text = "РўРѕР»СЊРєРѕ РґР»СЏ РІРѕРґРёС‚РµР»СЏ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РЅР° С‚СЂР°СЃСЃРµ", IsCorrect = false },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон через сплошную линию?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ С‡РµСЂРµР· СЃРїР»РѕС€РЅСѓСЋ Р»РёРЅРёСЋ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет встречных", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РІСЃС‚СЂРµС‡РЅС‹С…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает красный сигнал светофора?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ РєСЂР°СЃРЅС‹Р№ СЃРёРіРЅР°Р» СЃРІРµС‚РѕС„РѕСЂР°?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает движение", IsCorrect = true },
-                new Option { Text = "Разрешает движение", IsCorrect = false },
-                new Option { Text = "Предупреждает", IsCorrect = false },
-                new Option { Text = "Разрешает поворот", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РїРѕРІРѕСЂРѕС‚", IsCorrect = false }
             }
         }
     };
 
     tickets.Add(ticket2);
 
-    // ==================== БИЛЕТ 3 ====================
+    // ==================== Р‘РР›Р•Рў 3 ====================
     var ticket3 = new Ticket
     {
-        Name = "Билет №3",
-        Description = "Экзаменационный билет по ПДД категории B"
+        Name = "Р‘РёР»РµС‚ в„–3",
+        Description = "Р­РєР·Р°РјРµРЅР°С†РёРѕРЅРЅС‹Р№ Р±РёР»РµС‚ РїРѕ РџР”Р” РєР°С‚РµРіРѕСЂРёРё B"
     };
 
     ticket3.Questions = new List<Question>
     {
         new Question
         {
-            Text = "Разрешается ли остановка на трамвайных путях?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё РѕСЃС‚Р°РЅРѕРІРєР° РЅР° С‚СЂР°РјРІР°Р№РЅС‹С… РїСѓС‚СЏС…?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена если нет трамвая", IsCorrect = false },
-                new Option { Text = "Разрешена только для посадки", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РµСЃР»Рё РЅРµС‚ С‚СЂР°РјРІР°СЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РґР»СЏ РїРѕСЃР°РґРєРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Въезд запрещен»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«Р’СЉРµР·Рґ Р·Р°РїСЂРµС‰РµРЅВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает въезд всех ТС", IsCorrect = true },
-                new Option { Text = "Разрешает въезд", IsCorrect = false },
-                new Option { Text = "Запрещает только грузовым", IsCorrect = false },
-                new Option { Text = "Запрещает остановку", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РІСЉРµР·Рґ РІСЃРµС… РўРЎ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РІСЉРµР·Рґ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ С‚РѕР»СЊРєРѕ РіСЂСѓР·РѕРІС‹Рј", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РѕСЃС‚Р°РЅРѕРІРєСѓ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли разворот на автомагистрали?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° Р°РІС‚РѕРјР°РіРёСЃС‚СЂР°Р»Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен через разрыв", IsCorrect = false },
-                new Option { Text = "Разрешен только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‡РµСЂРµР· СЂР°Р·СЂС‹РІ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой стороны нужно обходить трамвай?",
+            Text = "РЎ РєР°РєРѕР№ СЃС‚РѕСЂРѕРЅС‹ РЅСѓР¶РЅРѕ РѕР±С…РѕРґРёС‚СЊ С‚СЂР°РјРІР°Р№?",
             Options = new List<Option>
             {
-                new Option { Text = "Спереди", IsCorrect = true },
-                new Option { Text = "Сзади", IsCorrect = false },
-                new Option { Text = "С любой стороны", IsCorrect = false },
-                new Option { Text = "Трамвай обходить нельзя", IsCorrect = false }
+                new Option { Text = "РЎРїРµСЂРµРґРё", IsCorrect = true },
+                new Option { Text = "РЎР·Р°РґРё", IsCorrect = false },
+                new Option { Text = "РЎ Р»СЋР±РѕР№ СЃС‚РѕСЂРѕРЅС‹", IsCorrect = false },
+                new Option { Text = "РўСЂР°РјРІР°Р№ РѕР±С…РѕРґРёС‚СЊ РЅРµР»СЊР·СЏ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли стоянка с работающим двигателем в жилой зоне?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё СЃС‚РѕСЏРЅРєР° СЃ СЂР°Р±РѕС‚Р°СЋС‰РёРј РґРІРёРіР°С‚РµР»РµРј РІ Р¶РёР»РѕР№ Р·РѕРЅРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена более 5 минут", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена только зимой", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР° Р±РѕР»РµРµ 5 РјРёРЅСѓС‚", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ Р·РёРјРѕР№", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Опасный поворот»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РћРїР°СЃРЅС‹Р№ РїРѕРІРѕСЂРѕС‚В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Предупреждает о повороте", IsCorrect = true },
-                new Option { Text = "Запрещает поворот", IsCorrect = false },
-                new Option { Text = "Разрешает поворот", IsCorrect = false },
-                new Option { Text = "Обозначает направление", IsCorrect = false }
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚ Рѕ РїРѕРІРѕСЂРѕС‚Рµ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РїРѕРІРѕСЂРѕС‚", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РїРѕРІРѕСЂРѕС‚", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ РЅР°РїСЂР°РІР»РµРЅРёРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли вы пропустить машину со спецсигналами?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІС‹ РїСЂРѕРїСѓСЃС‚РёС‚СЊ РјР°С€РёРЅСѓ СЃРѕ СЃРїРµС†СЃРёРіРЅР°Р»Р°РјРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны уступить дорогу", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Обязаны только на перекрестке", IsCorrect = false },
-                new Option { Text = "Обязаны только если она сзади", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РµСЃР»Рё РѕРЅР° СЃР·Р°РґРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на мосту?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° РјРѕСЃС‚Сѓ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет помех", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РїРѕРјРµС…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает двойная сплошная линия?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ РґРІРѕР№РЅР°СЏ СЃРїР»РѕС€РЅР°СЏ Р»РёРЅРёСЏ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает пересечение с обеих сторон", IsCorrect = true },
-                new Option { Text = "Разрешает обгон", IsCorrect = false },
-                new Option { Text = "Разрешает перестроение", IsCorrect = false },
-                new Option { Text = "Обозначает парковку", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РїРµСЂРµСЃРµС‡РµРЅРёРµ СЃ РѕР±РµРёС… СЃС‚РѕСЂРѕРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РѕР±РіРѕРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ РїР°СЂРєРѕРІРєСѓ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли движение задним ходом на автомагистрали?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё РґРІРёР¶РµРЅРёРµ Р·Р°РґРЅРёРј С…РѕРґРѕРј РЅР° Р°РІС‚РѕРјР°РіРёСЃС‚СЂР°Р»Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается для разворота", IsCorrect = false },
-                new Option { Text = "Разрешается если нет помех", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РґР»СЏ СЂР°Р·РІРѕСЂРѕС‚Р°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РµСЃР»Рё РЅРµС‚ РїРѕРјРµС…", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто имеет преимущество на перекрестке с круговым движением?",
+            Text = "РљС‚Рѕ РёРјРµРµС‚ РїСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ СЃ РєСЂСѓРіРѕРІС‹Рј РґРІРёР¶РµРЅРёРµРј?",
             Options = new List<Option>
             {
-                new Option { Text = "ТС на круге (если нет знаков)", IsCorrect = true },
-                new Option { Text = "Въезжающие на круг", IsCorrect = false },
-                new Option { Text = "Трамвай", IsCorrect = false },
-                new Option { Text = "Грузовые ТС", IsCorrect = false }
+                new Option { Text = "РўРЎ РЅР° РєСЂСѓРіРµ (РµСЃР»Рё РЅРµС‚ Р·РЅР°РєРѕРІ)", IsCorrect = true },
+                new Option { Text = "Р’СЉРµР·Р¶Р°СЋС‰РёРµ РЅР° РєСЂСѓРі", IsCorrect = false },
+                new Option { Text = "РўСЂР°РјРІР°Р№", IsCorrect = false },
+                new Option { Text = "Р“СЂСѓР·РѕРІС‹Рµ РўРЎ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли парковка на краю тротуара?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё РїР°СЂРєРѕРІРєР° РЅР° РєСЂР°СЋ С‚СЂРѕС‚СѓР°СЂР°?",
             Options = new List<Option>
             {
-                new Option { Text = "Только если есть знак", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Запрещена", IsCorrect = false },
-                new Option { Text = "Разрешена только мотоциклам", IsCorrect = false }
+                new Option { Text = "РўРѕР»СЊРєРѕ РµСЃР»Рё РµСЃС‚СЊ Р·РЅР°Рє", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РјРѕС‚РѕС†РёРєР»Р°Рј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Движение запрещено»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«Р”РІРёР¶РµРЅРёРµ Р·Р°РїСЂРµС‰РµРЅРѕВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает движение всех ТС", IsCorrect = true },
-                new Option { Text = "Разрешает движение", IsCorrect = false },
-                new Option { Text = "Запрещает остановку", IsCorrect = false },
-                new Option { Text = "Запрещает только грузовым", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ РІСЃРµС… РўРЎ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РѕСЃС‚Р°РЅРѕРІРєСѓ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ С‚РѕР»СЊРєРѕ РіСЂСѓР·РѕРІС‹Рј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на железнодорожном переезде?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° Р¶РµР»РµР·РЅРѕРґРѕСЂРѕР¶РЅРѕРј РїРµСЂРµРµР·РґРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет поезда", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РїРѕРµР·РґР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой скоростью можно двигаться по автомагистрали?",
+            Text = "РЎ РєР°РєРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РјРѕР¶РЅРѕ РґРІРёРіР°С‚СЊСЃСЏ РїРѕ Р°РІС‚РѕРјР°РіРёСЃС‚СЂР°Р»Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Не более 110 км/ч", IsCorrect = true },
-                new Option { Text = "Не более 90 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 130 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 70 км/ч", IsCorrect = false }
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 110 РєРј/С‡", IsCorrect = true },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 90 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 130 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 70 РєРј/С‡", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли вы включить фары в тоннеле?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІС‹ РІРєР»СЋС‡РёС‚СЊ С„Р°СЂС‹ РІ С‚РѕРЅРЅРµР»Рµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Только если темно", IsCorrect = false },
-                new Option { Text = "Только габариты", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РµСЃР»Рё С‚РµРјРЅРѕ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РіР°Р±Р°СЂРёС‚С‹", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли буксировка с неисправными тормозами?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё Р±СѓРєСЃРёСЂРѕРІРєР° СЃ РЅРµРёСЃРїСЂР°РІРЅС‹РјРё С‚РѕСЂРјРѕР·Р°РјРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается на тросе", IsCorrect = false },
-                new Option { Text = "Разрешается на жесткой сцепке", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РЅР° С‚СЂРѕСЃРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РЅР° Р¶РµСЃС‚РєРѕР№ СЃС†РµРїРєРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Пешеходный переход»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РџРµС€РµС…РѕРґРЅС‹Р№ РїРµСЂРµС…РѕРґВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Место перехода пешеходов", IsCorrect = true },
-                new Option { Text = "Запрет на движение", IsCorrect = false },
-                new Option { Text = "Разрешение на парковку", IsCorrect = false },
-                new Option { Text = "Опасный участок", IsCorrect = false }
+                new Option { Text = "РњРµСЃС‚Рѕ РїРµСЂРµС…РѕРґР° РїРµС€РµС…РѕРґРѕРІ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‚ РЅР° РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРёРµ РЅР° РїР°СЂРєРѕРІРєСѓ", IsCorrect = false },
+                new Option { Text = "РћРїР°СЃРЅС‹Р№ СѓС‡Р°СЃС‚РѕРє", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли разворот на пешеходном переходе?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° РїРµС€РµС…РѕРґРЅРѕРј РїРµСЂРµС…РѕРґРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет пешеходов", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РїРµС€РµС…РѕРґРѕРІ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто должен уступить дорогу при выезде с прилегающей территории?",
+            Text = "РљС‚Рѕ РґРѕР»Р¶РµРЅ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ РїСЂРё РІС‹РµР·РґРµ СЃ РїСЂРёР»РµРіР°СЋС‰РµР№ С‚РµСЂСЂРёС‚РѕСЂРёРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Водитель выезжающий с территории", IsCorrect = true },
-                new Option { Text = "Водитель на дороге", IsCorrect = false },
-                new Option { Text = "Оба водителя", IsCorrect = false },
-                new Option { Text = "Никто", IsCorrect = false }
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ РІС‹РµР·Р¶Р°СЋС‰РёР№ СЃ С‚РµСЂСЂРёС‚РѕСЂРёРё", IsCorrect = true },
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ РЅР° РґРѕСЂРѕРіРµ", IsCorrect = false },
+                new Option { Text = "РћР±Р° РІРѕРґРёС‚РµР»СЏ", IsCorrect = false },
+                new Option { Text = "РќРёРєС‚Рѕ", IsCorrect = false }
             }
         }
     };
 
     tickets.Add(ticket3);
 
-    // ==================== БИЛЕТ 4 ====================
+    // ==================== Р‘РР›Р•Рў 4 ====================
     var ticket4 = new Ticket
     {
-        Name = "Билет №4",
-        Description = "Экзаменационный билет по ПДД категории B"
+        Name = "Р‘РёР»РµС‚ в„–4",
+        Description = "Р­РєР·Р°РјРµРЅР°С†РёРѕРЅРЅС‹Р№ Р±РёР»РµС‚ РїРѕ РџР”Р” РєР°С‚РµРіРѕСЂРёРё B"
     };
 
     ticket4.Questions = new List<Question>
     {
         new Question
         {
-            Text = "Разрешена ли остановка на велосипедной дорожке?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё РѕСЃС‚Р°РЅРѕРІРєР° РЅР° РІРµР»РѕСЃРёРїРµРґРЅРѕР№ РґРѕСЂРѕР¶РєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false },
-                new Option { Text = "Разрешена для посадки", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РґР»СЏ РїРѕСЃР°РґРєРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Стоянка запрещена»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РЎС‚РѕСЏРЅРєР° Р·Р°РїСЂРµС‰РµРЅР°В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает стоянку", IsCorrect = true },
-                new Option { Text = "Запрещает остановку", IsCorrect = false },
-                new Option { Text = "Разрешает парковку", IsCorrect = false },
-                new Option { Text = "Запрещает движение", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ СЃС‚РѕСЏРЅРєСѓ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РѕСЃС‚Р°РЅРѕРІРєСѓ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РїР°СЂРєРѕРІРєСѓ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на регулируемом перекрестке?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° СЂРµРіСѓР»РёСЂСѓРµРјРѕРј РїРµСЂРµРєСЂРµСЃС‚РєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если зеленый", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё Р·РµР»РµРЅС‹Р№", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой стороны нужно объезжать островок безопасности?",
+            Text = "РЎ РєР°РєРѕР№ СЃС‚РѕСЂРѕРЅС‹ РЅСѓР¶РЅРѕ РѕР±СЉРµР·Р¶Р°С‚СЊ РѕСЃС‚СЂРѕРІРѕРє Р±РµР·РѕРїР°СЃРЅРѕСЃС‚Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Слева", IsCorrect = true },
-                new Option { Text = "Справа", IsCorrect = false },
-                new Option { Text = "С любой стороны", IsCorrect = false },
-                new Option { Text = "Объезжать нельзя", IsCorrect = false }
+                new Option { Text = "РЎР»РµРІР°", IsCorrect = true },
+                new Option { Text = "РЎРїСЂР°РІР°", IsCorrect = false },
+                new Option { Text = "РЎ Р»СЋР±РѕР№ СЃС‚РѕСЂРѕРЅС‹", IsCorrect = false },
+                new Option { Text = "РћР±СЉРµР·Р¶Р°С‚СЊ РЅРµР»СЊР·СЏ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли стоянка ближе 50м от переезда?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё СЃС‚РѕСЏРЅРєР° Р±Р»РёР¶Рµ 50Рј РѕС‚ РїРµСЂРµРµР·РґР°?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена если нет поезда", IsCorrect = false },
-                new Option { Text = "Разрешена только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РµСЃР»Рё РЅРµС‚ РїРѕРµР·РґР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Движение без остановки запрещено»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«Р”РІРёР¶РµРЅРёРµ Р±РµР· РѕСЃС‚Р°РЅРѕРІРєРё Р·Р°РїСЂРµС‰РµРЅРѕВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязательная остановка", IsCorrect = true },
-                new Option { Text = "Разрешает движение", IsCorrect = false },
-                new Option { Text = "Запрещает въезд", IsCorrect = false },
-                new Option { Text = "Предупреждает", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°С‚РµР»СЊРЅР°СЏ РѕСЃС‚Р°РЅРѕРІРєР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РІСЉРµР·Рґ", IsCorrect = false },
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли вы пропустить пешехода переходящего дорогу?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІС‹ РїСЂРѕРїСѓСЃС‚РёС‚СЊ РїРµС€РµС…РѕРґР° РїРµСЂРµС…РѕРґСЏС‰РµРіРѕ РґРѕСЂРѕРіСѓ?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Только на переходе", IsCorrect = false },
-                new Option { Text = "Только по зеленому", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РЅР° РїРµСЂРµС…РѕРґРµ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РїРѕ Р·РµР»РµРЅРѕРјСѓ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли разворот на остановке общественного транспорта?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° РѕСЃС‚Р°РЅРѕРІРєРµ РѕР±С‰РµСЃС‚РІРµРЅРЅРѕРіРѕ С‚СЂР°РЅСЃРїРѕСЂС‚Р°?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет автобуса", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ Р°РІС‚РѕР±СѓСЃР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает прерывистая линия с длинными штрихами?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ РїСЂРµСЂС‹РІРёСЃС‚Р°СЏ Р»РёРЅРёСЏ СЃ РґР»РёРЅРЅС‹РјРё С€С‚СЂРёС…Р°РјРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешает обгон и перестроение", IsCorrect = true },
-                new Option { Text = "Запрещает обгон", IsCorrect = false },
-                new Option { Text = "Запрещает перестроение", IsCorrect = false },
-                new Option { Text = "Обозначает край дороги", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РѕР±РіРѕРЅ Рё РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РѕР±РіРѕРЅ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РїРµСЂРµСЃС‚СЂРѕРµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ РєСЂР°Р№ РґРѕСЂРѕРіРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли движение по обочине?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё РґРІРёР¶РµРЅРёРµ РїРѕ РѕР±РѕС‡РёРЅРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается для обгона", IsCorrect = false },
-                new Option { Text = "Разрешается для объезда", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РґР»СЏ РѕР±РіРѕРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РґР»СЏ РѕР±СЉРµР·РґР°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто имеет преимущество на нерегулируемом перекрестке равнозначных дорог?",
+            Text = "РљС‚Рѕ РёРјРµРµС‚ РїСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РЅР° РЅРµСЂРµРіСѓР»РёСЂСѓРµРјРѕРј РїРµСЂРµРєСЂРµСЃС‚РєРµ СЂР°РІРЅРѕР·РЅР°С‡РЅС‹С… РґРѕСЂРѕРі?",
             Options = new List<Option>
             {
-                new Option { Text = "Трамвай", IsCorrect = true },
-                new Option { Text = "Легковой автомобиль", IsCorrect = false },
-                new Option { Text = "Грузовой автомобиль", IsCorrect = false },
-                new Option { Text = "Тот кто справа", IsCorrect = false }
+                new Option { Text = "РўСЂР°РјРІР°Р№", IsCorrect = true },
+                new Option { Text = "Р›РµРіРєРѕРІРѕР№ Р°РІС‚РѕРјРѕР±РёР»СЊ", IsCorrect = false },
+                new Option { Text = "Р“СЂСѓР·РѕРІРѕР№ Р°РІС‚РѕРјРѕР±РёР»СЊ", IsCorrect = false },
+                new Option { Text = "РўРѕС‚ РєС‚Рѕ СЃРїСЂР°РІР°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли парковка на проезжей части?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё РїР°СЂРєРѕРІРєР° РЅР° РїСЂРѕРµР·Р¶РµР№ С‡Р°СЃС‚Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешена если нет запрещающих знаков", IsCorrect = true },
-                new Option { Text = "Разрешена всегда", IsCorrect = false },
-                new Option { Text = "Запрещена", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РµСЃР»Рё РЅРµС‚ Р·Р°РїСЂРµС‰Р°СЋС‰РёС… Р·РЅР°РєРѕРІ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РІСЃРµРіРґР°", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Ограничение скорости»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РћРіСЂР°РЅРёС‡РµРЅРёРµ СЃРєРѕСЂРѕСЃС‚РёВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Максимальная разрешенная скорость", IsCorrect = true },
-                new Option { Text = "Минимальная скорость", IsCorrect = false },
-                new Option { Text = "Рекомендуемая скорость", IsCorrect = false },
-                new Option { Text = "Конец ограничения", IsCorrect = false }
+                new Option { Text = "РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ СЂР°Р·СЂРµС€РµРЅРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ", IsCorrect = true },
+                new Option { Text = "РњРёРЅРёРјР°Р»СЊРЅР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ", IsCorrect = false },
+                new Option { Text = "Р РµРєРѕРјРµРЅРґСѓРµРјР°СЏ СЃРєРѕСЂРѕСЃС‚СЊ", IsCorrect = false },
+                new Option { Text = "РљРѕРЅРµС† РѕРіСЂР°РЅРёС‡РµРЅРёСЏ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон в тоннеле?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РІ С‚РѕРЅРЅРµР»Рµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если есть освещение", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РµСЃС‚СЊ РѕСЃРІРµС‰РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой скоростью можно двигаться в жилой зоне ночью?",
+            Text = "РЎ РєР°РєРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РјРѕР¶РЅРѕ РґРІРёРіР°С‚СЊСЃСЏ РІ Р¶РёР»РѕР№ Р·РѕРЅРµ РЅРѕС‡СЊСЋ?",
             Options = new List<Option>
             {
-                new Option { Text = "Не более 20 км/ч", IsCorrect = true },
-                new Option { Text = "Не более 40 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 60 км/ч", IsCorrect = false },
-                new Option { Text = "Ограничений нет", IsCorrect = false }
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 20 РєРј/С‡", IsCorrect = true },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 40 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 60 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РћРіСЂР°РЅРёС‡РµРЅРёР№ РЅРµС‚", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли вы включить аварийную сигнализацию при ДТП?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІС‹ РІРєР»СЋС‡РёС‚СЊ Р°РІР°СЂРёР№РЅСѓСЋ СЃРёРіРЅР°Р»РёР·Р°С†РёСЋ РїСЂРё Р”РўРџ?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Только если есть пострадавшие", IsCorrect = false },
-                new Option { Text = "Только ночью", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РµСЃР»Рё РµСЃС‚СЊ РїРѕСЃС‚СЂР°РґР°РІС€РёРµ", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли буксировка мотоцикла без коляски?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё Р±СѓРєСЃРёСЂРѕРІРєР° РјРѕС‚РѕС†РёРєР»Р° Р±РµР· РєРѕР»СЏСЃРєРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается на тросе", IsCorrect = false },
-                new Option { Text = "Разрешается на жесткой сцепке", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РЅР° С‚СЂРѕСЃРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РЅР° Р¶РµСЃС‚РєРѕР№ СЃС†РµРїРєРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Направление поворота»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РќР°РїСЂР°РІР»РµРЅРёРµ РїРѕРІРѕСЂРѕС‚Р°В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешенное направление движения", IsCorrect = true },
-                new Option { Text = "Запрещенный поворот", IsCorrect = false },
-                new Option { Text = "Объезд препятствия", IsCorrect = false },
-                new Option { Text = "Конец дороги", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅРЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ РґРІРёР¶РµРЅРёСЏ", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅРЅС‹Р№ РїРѕРІРѕСЂРѕС‚", IsCorrect = false },
+                new Option { Text = "РћР±СЉРµР·Рґ РїСЂРµРїСЏС‚СЃС‚РІРёСЏ", IsCorrect = false },
+                new Option { Text = "РљРѕРЅРµС† РґРѕСЂРѕРіРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли разворот на автомагистрали?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° Р°РІС‚РѕРјР°РіРёСЃС‚СЂР°Р»Рё?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен через разрыв", IsCorrect = false },
-                new Option { Text = "Разрешен только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‡РµСЂРµР· СЂР°Р·СЂС‹РІ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто должен уступить дорогу при перестроении?",
+            Text = "РљС‚Рѕ РґРѕР»Р¶РµРЅ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ РїСЂРё РїРµСЂРµСЃС‚СЂРѕРµРЅРёРё?",
             Options = new List<Option>
             {
-                new Option { Text = "Водитель перестраивающийся", IsCorrect = true },
-                new Option { Text = "Водитель на своей полосе", IsCorrect = false },
-                new Option { Text = "Оба водителя", IsCorrect = false },
-                new Option { Text = "Никто", IsCorrect = false }
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ РїРµСЂРµСЃС‚СЂР°РёРІР°СЋС‰РёР№СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ РЅР° СЃРІРѕРµР№ РїРѕР»РѕСЃРµ", IsCorrect = false },
+                new Option { Text = "РћР±Р° РІРѕРґРёС‚РµР»СЏ", IsCorrect = false },
+                new Option { Text = "РќРёРєС‚Рѕ", IsCorrect = false }
             }
         }
     };
 
     tickets.Add(ticket4);
 
-    // ==================== БИЛЕТ 5 ====================
+    // ==================== Р‘РР›Р•Рў 5 ====================
     var ticket5 = new Ticket
     {
-        Name = "Билет №5",
-        Description = "Экзаменационный билет по ПДД категории B"
+        Name = "Р‘РёР»РµС‚ в„–5",
+        Description = "Р­РєР·Р°РјРµРЅР°С†РёРѕРЅРЅС‹Р№ Р±РёР»РµС‚ РїРѕ РџР”Р” РєР°С‚РµРіРѕСЂРёРё B"
     };
 
     ticket5.Questions = new List<Question>
     {
         new Question
         {
-            Text = "Разрешена ли остановка на проезжей части вне населенного пункта?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё РѕСЃС‚Р°РЅРѕРІРєР° РЅР° РїСЂРѕРµР·Р¶РµР№ С‡Р°СЃС‚Рё РІРЅРµ РЅР°СЃРµР»РµРЅРЅРѕРіРѕ РїСѓРЅРєС‚Р°?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешена на обочине", IsCorrect = true },
-                new Option { Text = "Разрешена на полосе", IsCorrect = false },
-                new Option { Text = "Запрещена", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РЅР° РѕР±РѕС‡РёРЅРµ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РЅР° РїРѕР»РѕСЃРµ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Стоянка запрещена с работой двигателя»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РЎС‚РѕСЏРЅРєР° Р·Р°РїСЂРµС‰РµРЅР° СЃ СЂР°Р±РѕС‚РѕР№ РґРІРёРіР°С‚РµР»СЏВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещает стоянку с работающим двигателем", IsCorrect = true },
-                new Option { Text = "Разрешает стоянку", IsCorrect = false },
-                new Option { Text = "Запрещает остановку", IsCorrect = false },
-                new Option { Text = "Запрещает движение", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ СЃС‚РѕСЏРЅРєСѓ СЃ СЂР°Р±РѕС‚Р°СЋС‰РёРј РґРІРёРіР°С‚РµР»РµРј", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ СЃС‚РѕСЏРЅРєСѓ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РѕСЃС‚Р°РЅРѕРІРєСѓ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на подъеме?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° РїРѕРґСЉРµРјРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен на крутом подъеме", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет встречных", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ РЅР° РєСЂСѓС‚РѕРј РїРѕРґСЉРµРјРµ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РІСЃС‚СЂРµС‡РЅС‹С…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой стороны нужно обходить автобус на остановке?",
+            Text = "РЎ РєР°РєРѕР№ СЃС‚РѕСЂРѕРЅС‹ РЅСѓР¶РЅРѕ РѕР±С…РѕРґРёС‚СЊ Р°РІС‚РѕР±СѓСЃ РЅР° РѕСЃС‚Р°РЅРѕРІРєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Сзади", IsCorrect = true },
-                new Option { Text = "Спереди", IsCorrect = false },
-                new Option { Text = "С любой стороны", IsCorrect = false },
-                new Option { Text = "Автобус обходить нельзя", IsCorrect = false }
+                new Option { Text = "РЎР·Р°РґРё", IsCorrect = true },
+                new Option { Text = "РЎРїРµСЂРµРґРё", IsCorrect = false },
+                new Option { Text = "РЎ Р»СЋР±РѕР№ СЃС‚РѕСЂРѕРЅС‹", IsCorrect = false },
+                new Option { Text = "РђРІС‚РѕР±СѓСЃ РѕР±С…РѕРґРёС‚СЊ РЅРµР»СЊР·СЏ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли стоянка на газоне?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё СЃС‚РѕСЏРЅРєР° РЅР° РіР°Р·РѕРЅРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещена", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Разрешена если нет знака", IsCorrect = false },
-                new Option { Text = "Разрешена только ночью", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° РµСЃР»Рё РЅРµС‚ Р·РЅР°РєР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РЅРѕС‡СЊСЋ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Искусственная неровность»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РСЃРєСѓСЃСЃС‚РІРµРЅРЅР°СЏ РЅРµСЂРѕРІРЅРѕСЃС‚СЊВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Предупреждает о лежачем полицейском", IsCorrect = true },
-                new Option { Text = "Запрещает движение", IsCorrect = false },
-                new Option { Text = "Разрешает объезд", IsCorrect = false },
-                new Option { Text = "Обозначает яму", IsCorrect = false }
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚ Рѕ Р»РµР¶Р°С‡РµРј РїРѕР»РёС†РµР№СЃРєРѕРј", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РѕР±СЉРµР·Рґ", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ СЏРјСѓ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли вы уступить дорогу трамваю?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІС‹ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ С‚СЂР°РјРІР°СЋ?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны в равнозначных условиях", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Обязаны только на перекрестке", IsCorrect = false },
-                new Option { Text = "Обязаны только если он слева", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ РІ СЂР°РІРЅРѕР·РЅР°С‡РЅС‹С… СѓСЃР»РѕРІРёСЏС…", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ", IsCorrect = false },
+                new Option { Text = "РћР±СЏР·Р°РЅС‹ С‚РѕР»СЊРєРѕ РµСЃР»Рё РѕРЅ СЃР»РµРІР°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на эстакаде?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° СЌСЃС‚Р°РєР°РґРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет помех", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ РїРѕРјРµС…", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает разметка «Зебра»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ СЂР°Р·РјРµС‚РєР° В«Р—РµР±СЂР°В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Пешеходный переход", IsCorrect = true },
-                new Option { Text = "Велосипедная дорожка", IsCorrect = false },
-                new Option { Text = "Остановка транспорта", IsCorrect = false },
-                new Option { Text = "Опасный участок", IsCorrect = false }
+                new Option { Text = "РџРµС€РµС…РѕРґРЅС‹Р№ РїРµСЂРµС…РѕРґ", IsCorrect = true },
+                new Option { Text = "Р’РµР»РѕСЃРёРїРµРґРЅР°СЏ РґРѕСЂРѕР¶РєР°", IsCorrect = false },
+                new Option { Text = "РћСЃС‚Р°РЅРѕРІРєР° С‚СЂР°РЅСЃРїРѕСЂС‚Р°", IsCorrect = false },
+                new Option { Text = "РћРїР°СЃРЅС‹Р№ СѓС‡Р°СЃС‚РѕРє", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли движение по трамвайным путям?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё РґРІРёР¶РµРЅРёРµ РїРѕ С‚СЂР°РјРІР°Р№РЅС‹Рј РїСѓС‚СЏРј?",
             Options = new List<Option>
             {
-                new Option { Text = "Разрешается попутного направления", IsCorrect = true },
-                new Option { Text = "Разрешается всегда", IsCorrect = false },
-                new Option { Text = "Запрещается", IsCorrect = false },
-                new Option { Text = "Разрешается для обгона", IsCorrect = false }
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РїРѕРїСѓС‚РЅРѕРіРѕ РЅР°РїСЂР°РІР»РµРЅРёСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РІСЃРµРіРґР°", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РґР»СЏ РѕР±РіРѕРЅР°", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто имеет преимущество при выезде из двора?",
+            Text = "РљС‚Рѕ РёРјРµРµС‚ РїСЂРµРёРјСѓС‰РµСЃС‚РІРѕ РїСЂРё РІС‹РµР·РґРµ РёР· РґРІРѕСЂР°?",
             Options = new List<Option>
             {
-                new Option { Text = "ТС на дороге", IsCorrect = true },
-                new Option { Text = "Выезжающий из двора", IsCorrect = false },
-                new Option { Text = "Оба водителя", IsCorrect = false },
-                new Option { Text = "Никто", IsCorrect = false }
+                new Option { Text = "РўРЎ РЅР° РґРѕСЂРѕРіРµ", IsCorrect = true },
+                new Option { Text = "Р’С‹РµР·Р¶Р°СЋС‰РёР№ РёР· РґРІРѕСЂР°", IsCorrect = false },
+                new Option { Text = "РћР±Р° РІРѕРґРёС‚РµР»СЏ", IsCorrect = false },
+                new Option { Text = "РќРёРєС‚Рѕ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешена ли парковка на тротуаре?",
+            Text = "Р Р°Р·СЂРµС€РµРЅР° Р»Рё РїР°СЂРєРѕРІРєР° РЅР° С‚СЂРѕС‚СѓР°СЂРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Только если есть знак", IsCorrect = true },
-                new Option { Text = "Разрешена", IsCorrect = false },
-                new Option { Text = "Запрещена", IsCorrect = false },
-                new Option { Text = "Разрешена только мотоциклам", IsCorrect = false }
+                new Option { Text = "РўРѕР»СЊРєРѕ РµСЃР»Рё РµСЃС‚СЊ Р·РЅР°Рє", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅР°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅР° С‚РѕР»СЊРєРѕ РјРѕС‚РѕС†РёРєР»Р°Рј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Конец зоны ограничения скорости»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«РљРѕРЅРµС† Р·РѕРЅС‹ РѕРіСЂР°РЅРёС‡РµРЅРёСЏ СЃРєРѕСЂРѕСЃС‚РёВ»?",
             Options = new List<Option>
             {
-                new Option { Text = "Отменяет ограничение", IsCorrect = true },
-                new Option { Text = "Устанавливает ограничение", IsCorrect = false },
-                new Option { Text = "Запрещает движение", IsCorrect = false },
-                new Option { Text = "Предупреждает", IsCorrect = false }
+                new Option { Text = "РћС‚РјРµРЅСЏРµС‚ РѕРіСЂР°РЅРёС‡РµРЅРёРµ", IsCorrect = true },
+                new Option { Text = "РЈСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РѕРіСЂР°РЅРёС‡РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли обгон на перекрестке?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё РѕР±РіРѕРЅ РЅР° РїРµСЂРµРєСЂРµСЃС‚РєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен на регулируемом", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РЅР° СЂРµРіСѓР»РёСЂСѓРµРјРѕРј", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "С какой скоростью можно двигаться в населенном пункте на мотоцикле?",
+            Text = "РЎ РєР°РєРѕР№ СЃРєРѕСЂРѕСЃС‚СЊСЋ РјРѕР¶РЅРѕ РґРІРёРіР°С‚СЊСЃСЏ РІ РЅР°СЃРµР»РµРЅРЅРѕРј РїСѓРЅРєС‚Рµ РЅР° РјРѕС‚РѕС†РёРєР»Рµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Не более 60 км/ч", IsCorrect = true },
-                new Option { Text = "Не более 40 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 80 км/ч", IsCorrect = false },
-                new Option { Text = "Не более 90 км/ч", IsCorrect = false }
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 60 РєРј/С‡", IsCorrect = true },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 40 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 80 РєРј/С‡", IsCorrect = false },
+                new Option { Text = "РќРµ Р±РѕР»РµРµ 90 РєРј/С‡", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Обязаны ли вы включить фары в темное время суток?",
+            Text = "РћР±СЏР·Р°РЅС‹ Р»Рё РІС‹ РІРєР»СЋС‡РёС‚СЊ С„Р°СЂС‹ РІ С‚РµРјРЅРѕРµ РІСЂРµРјСЏ СЃСѓС‚РѕРє?",
             Options = new List<Option>
             {
-                new Option { Text = "Обязаны", IsCorrect = true },
-                new Option { Text = "Не обязаны", IsCorrect = false },
-                new Option { Text = "Только габариты", IsCorrect = false },
-                new Option { Text = "Только в городе", IsCorrect = false }
+                new Option { Text = "РћР±СЏР·Р°РЅС‹", IsCorrect = true },
+                new Option { Text = "РќРµ РѕР±СЏР·Р°РЅС‹", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РіР°Р±Р°СЂРёС‚С‹", IsCorrect = false },
+                new Option { Text = "РўРѕР»СЊРєРѕ РІ РіРѕСЂРѕРґРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешается ли буксировка с неисправным рулевым управлением?",
+            Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ Р»Рё Р±СѓРєСЃРёСЂРѕРІРєР° СЃ РЅРµРёСЃРїСЂР°РІРЅС‹Рј СЂСѓР»РµРІС‹Рј СѓРїСЂР°РІР»РµРЅРёРµРј?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещается", IsCorrect = true },
-                new Option { Text = "Разрешается", IsCorrect = false },
-                new Option { Text = "Разрешается на тросе", IsCorrect = false },
-                new Option { Text = "Разрешается на жесткой сцепке", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚СЃСЏ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РЅР° С‚СЂРѕСЃРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚СЃСЏ РЅР° Р¶РµСЃС‚РєРѕР№ СЃС†РµРїРєРµ", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Что означает знак «Дорожные работы»?",
+            Text = "Р§С‚Рѕ РѕР·РЅР°С‡Р°РµС‚ Р·РЅР°Рє В«Р”РѕСЂРѕР¶РЅС‹Рµ СЂР°Р±РѕС‚С‹В»?",
             Options = new List<Option>
             {
-                new Option { Text = "Предупреждает о работах", IsCorrect = true },
-                new Option { Text = "Запрещает движение", IsCorrect = false },
-                new Option { Text = "Разрешает объезд", IsCorrect = false },
-                new Option { Text = "Обозначает конец дороги", IsCorrect = false }
+                new Option { Text = "РџСЂРµРґСѓРїСЂРµР¶РґР°РµС‚ Рѕ СЂР°Р±РѕС‚Р°С…", IsCorrect = true },
+                new Option { Text = "Р—Р°РїСЂРµС‰Р°РµС‚ РґРІРёР¶РµРЅРёРµ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€Р°РµС‚ РѕР±СЉРµР·Рґ", IsCorrect = false },
+                new Option { Text = "РћР±РѕР·РЅР°С‡Р°РµС‚ РєРѕРЅРµС† РґРѕСЂРѕРіРё", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Разрешен ли разворот на остановке?",
+            Text = "Р Р°Р·СЂРµС€РµРЅ Р»Рё СЂР°Р·РІРѕСЂРѕС‚ РЅР° РѕСЃС‚Р°РЅРѕРІРєРµ?",
             Options = new List<Option>
             {
-                new Option { Text = "Запрещен", IsCorrect = true },
-                new Option { Text = "Разрешен", IsCorrect = false },
-                new Option { Text = "Разрешен если нет транспорта", IsCorrect = false },
-                new Option { Text = "Разрешен только днем", IsCorrect = false }
+                new Option { Text = "Р—Р°РїСЂРµС‰РµРЅ", IsCorrect = true },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ РµСЃР»Рё РЅРµС‚ С‚СЂР°РЅСЃРїРѕСЂС‚Р°", IsCorrect = false },
+                new Option { Text = "Р Р°Р·СЂРµС€РµРЅ С‚РѕР»СЊРєРѕ РґРЅРµРј", IsCorrect = false }
             }
         },
         new Question
         {
-            Text = "Кто должен уступить дорогу при одновременном проезде нерегулируемого перекрестка?",
+            Text = "РљС‚Рѕ РґРѕР»Р¶РµРЅ СѓСЃС‚СѓРїРёС‚СЊ РґРѕСЂРѕРіСѓ РїСЂРё РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕРј РїСЂРѕРµР·РґРµ РЅРµСЂРµРіСѓР»РёСЂСѓРµРјРѕРіРѕ РїРµСЂРµРєСЂРµСЃС‚РєР°?",
             Options = new List<Option>
             {
-                new Option { Text = "Водитель уступающий справа", IsCorrect = true },
-                new Option { Text = "Водитель справа", IsCorrect = false },
-                new Option { Text = "Оба водителя", IsCorrect = false },
-                new Option { Text = "Никто", IsCorrect = false }
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ СѓСЃС‚СѓРїР°СЋС‰РёР№ СЃРїСЂР°РІР°", IsCorrect = true },
+                new Option { Text = "Р’РѕРґРёС‚РµР»СЊ СЃРїСЂР°РІР°", IsCorrect = false },
+                new Option { Text = "РћР±Р° РІРѕРґРёС‚РµР»СЏ", IsCorrect = false },
+                new Option { Text = "РќРёРєС‚Рѕ", IsCorrect = false }
             }
         }
     };
 
     tickets.Add(ticket5);
 
-    // Добавляем все билеты в базу
+    // Р”РѕР±Р°РІР»СЏРµРј РІСЃРµ Р±РёР»РµС‚С‹ РІ Р±Р°Р·Сѓ
     db.Tickets.AddRange(tickets);
 }
